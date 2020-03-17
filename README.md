@@ -27,7 +27,8 @@ Opentron Setup and Protocol Developments
 - 96 Well PCR Plate
 - 3x racks 20ul filter tips
 
-**Link to set-up**: (https://blog.opentrons.com/testing-for-covid-19-with-opentrons/)[https://blog.opentrons.com/testing-for-covid-19-with-opentrons/]
+**Link to set-up**   
+[OpenTrons Blog: testing-for-covid-19-with-opentrons](https://blog.opentrons.com/testing-for-covid-19-with-opentrons/)
 
 ### Useful links:
 - Inventory list for the set-up [Google sheet](https://docs.google.com/spreadsheets/d/1IXwK0cWIpoJH6buccEWw6tXUe-AK9qkG0Rh0vMV8kj4/edit?usp=sharing)
