@@ -4,7 +4,8 @@
 # to run from bash command line:
 # > opentrons_simulate rna_extraction.py
 
-# based on nucleic_acid_extraction.ot2.py from https://protocol-delivery.protocols.opentrons.com/protocol/1584
+# following protocol from: https://bomb.bio/wp-content/uploads/2018/09/8.2_BOMB_total_RNA_extraction_mammalian_GITC_V1.0.pdf
+# snippets taken from nucleic_acid_extraction.ot2.py from https://protocol-delivery.protocols.opentrons.com/protocol/1584
 
 from collections import OrderedDict
 from opentrons import labware, instruments, modules, robot
