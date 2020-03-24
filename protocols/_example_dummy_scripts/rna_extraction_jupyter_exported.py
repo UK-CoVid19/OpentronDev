@@ -3,15 +3,31 @@
 
 # ## To do list
 # 
-# * get a list of the reagents and their concentrations and volumes
+# * get a list of the reagents and their concentrations and volumes => done
 # * get a list of all the equipment
+# * 
+# * add a function to "vortex" and to resuspend the beads before dispensing otherwise they form clumps
+# * 
+# * **figure out how to get LYSIS_BUFFER_NEWTIP='never' to work!**
+# I have this somewhere in my scripts, I will have a look (Aubin)
+# 
+# * **figure out how to tell machine to stop, remember where it is and to continue after command** robot.pause() brings the machine to a halt, it is the same as clicking "Pause" in the app. The protocol then has to be resumed manually via the app (click "Resume"). To just introduce a delay use \[pipette instance].delay(opt) so for example here that would be m300.delay(minutes=5)
 
 # ## To simulate protocol
 # 
-# export file to rna_extraction.py manually then in terminal:<br>
+# * export file to rna_extraction.py manually then in terminal:<br>
 # $ opentrons_simulate rna_extraction.py
 # 
-# OR go to the last two cells that automatically export to *.py then simulate it and print the output
+# OR 
+# 
+# * go to the last two cells that automatically export to *.py then simulate it and print the output
+
+# ## To have the robot comment something in the simulator/app
+# 
+# add a line with the following code :
+# 
+# **robot.comment("Type your comment here")**
+# 
 
 # ## Resources
 # 
@@ -35,7 +51,7 @@ metadata = {
 # In[2]:
 
 
-# intalling opentrons module (only once)
+# intalling opentrons module (needed only once)
 #import sys
 #!{sys.executable} -m pip install opentrons 
 
@@ -43,7 +59,7 @@ metadata = {
 # In[3]:
 
 
-# updating opentrons module (not really needed)
+# updating opentrons module (do it once every few weeks or after an API update)
 #import sys
 #!{sys.executable} -m pip install --upgrade opentrons
 
@@ -53,16 +69,10 @@ metadata = {
 
 # import standard modules
 from collections import OrderedDict
+
+# import Opentrons module
 from opentrons import labware, instruments, modules, robot
 
-
-# ## To do list
-# 
-# * **figure out how to get LYSIS_BUFFER_NEWTIP='never' to work!**
-# I have this somewhere in my scripts, I will have a look
-# 
-# * **figure out how to tell machine to stop, remember where it is and to continue after command** robot.pause() brings the machine to a halt, it is the same as clicking "Pause" in the app. The protocol then has to be resumed manually via the app (click "Resume"). To just introduce a delay use \[pipette instance].delay(opt) so for example here that would be m300.delay(minutes=5)
-# 
 
 # 
 # ## Comments
@@ -89,26 +99,25 @@ if plate_name not in labware.list():
         volume=200
     )
 
-# labware
+# instanciate pre-defined labware
 trough = labware.load('trough-12row', '2', 'trough')
 fresh_plate = labware.load(plate_name, '3', 'fresh plate')
 
+# instanciate tip rack in remaining slots
 tips = [labware.load('opentrons-tiprack-300ul', str(slot)) for slot in range(5, 10)]
 print('-' * 50)
 print('Make sure the `tips` make sense!')
 print(tips)
 print('-' * 50)
 
-# modules
+# load additional modules
 magdeck = modules.load('magdeck', '1')
 sample_plate = labware.load(plate_name, '1', share=True)
 
 tempdeck = modules.load('tempdeck', '4')
 tempdeck.set_temperature(25)
 
-
-
-# instruments
+# load pipette
 m300 = instruments.P300_Multi(mount='right', tip_racks=tips)
 
 
@@ -141,7 +150,8 @@ m300 = instruments.P300_Multi(mount='right', tip_racks=tips)
 # I think I will implement this in all my protocols :)
 
 NEW_TIP = 'never'
-MIX_REPETITIONS = 15
+MIX_REPETITIONS = 15 # it is probably to adjust MIX_REPETITIONS numbers in each step below instead of 
+# the default value provided here to better reflect the protocol 
 
 reagents = OrderedDict()
 # Add 240 μl of lysis buffer, seal and shake at RT at 1400 rpm for 5 min
@@ -219,7 +229,7 @@ for reagent_name in reagents:
 # It pipettes up/down the liquid at various (or even random)
 # heights in the well, ensuring everything is homogeneously mixed
 # I will look for it and add it so maybe we can use it in the function
-# transfer_and_mix what do you think?
+# transfer_and_mix what do you think? (Aubin)
 
 
 def transfer_and_mix(reagent, samples):
@@ -254,8 +264,7 @@ def trash_supernatant(volume, height, samples):
 # I will split each line of the protocol into different cells for now
 
 
-
-# ### number_of_sample_columns is basically the only parameter the user will change once the protocol is set up
+# ### note: <u> number_of_sample_columns</u> is the only parameter the user will change once the protocol is optimised
 
 # In[10]:
 
@@ -265,6 +274,21 @@ number_of_sample_columns=1
 
 # In[11]:
 
+
+# IMPORTANT REMARKS
+
+# the API is not too robust yet as regards sanity checks
+# Consequently the robot is still a danger to itself 
+# and has pronounced taste for self-destruction
+
+# never ever remove the block below
+# unless you want the robot to pipette wells located beyond plate boundaries
+# crushing all your labware
+
+# also, when using a multi-channel pipette, make sure you are ALWAYS 
+# using well coordinates from first row (A1 to A12) of your 96-well plate
+# unless you want to spent countless hours re-calibrating your robot after
+# its arm collided on external walls
 
 if number_of_sample_columns > 12:
     raise Exception("Please specify a valid number of sample columns.")
@@ -276,7 +300,9 @@ samples = sample_plate.rows('A')[0:number_of_sample_columns]
 # In[12]:
 
 
-# steps 1-2 : sample collection
+# steps 1-2
+
+# sample collection, nothing to do here
 
 
 # In[13]:
@@ -288,15 +314,6 @@ samples = sample_plate.rows('A')[0:number_of_sample_columns]
 transfer_and_mix(reagents['lysis_buffer'], samples)
 
 
-# In[14]:
-
-
-
-# --- OpenTron does not have Seal and Shake modules ---
-# figure out how to tell machine to stop, remember where it is and to continue after command
-# transfer and mix isopropanol
-
-
 # In[15]:
 
 
@@ -305,6 +322,8 @@ transfer_and_mix(reagents['lysis_buffer'], samples)
 # Add 320 µl of isopropanol, seal and shake at RT at 1400 rpm for 5 min
 transfer_and_mix(reagents['isopropanol_320'], samples)
 
+
+# ### here, a function to resuspend the beads before dispensing them is needed
 
 # In[16]:
 
@@ -320,9 +339,10 @@ transfer_and_mix(reagents['magnetic_beads'], samples)
 
 # step 6
 
-#Settle the magnetic beads on a magnetic stand and discard the supernatant
-# this block can probably be factorised, 
+# Settle the magnetic beads on a magnetic stand and discard the supernatant
+# this block can probably be factorised as a function
 # considering the number of times it is used throughout the protocol
+
 robot.comment("Activating magdeck for 5 minutes")
 magdeck.engage(height=15)
 m300.delay(minutes=5)# may need to increase to let the beads settle
@@ -360,7 +380,7 @@ m300.delay(minutes=5)# may need to increase to let the beads settle
 # In[21]:
 
 
-# volume & height from bottom to be adjusted based on tests
+# volume & height from bottom of the well are to be adjusted based on tests
 trash_supernatant(volume=900, height=2, samples=samples)
 
 
