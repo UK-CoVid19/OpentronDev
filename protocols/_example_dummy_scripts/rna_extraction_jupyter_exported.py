@@ -37,7 +37,7 @@ metadata = {
 
 # intalling opentrons module (only once)
 #import sys
-#!{sys.executable} -m pip install opentrons
+#!{sys.executable} -m pip install opentrons 
 
 
 # In[3]:
