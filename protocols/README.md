@@ -5,6 +5,6 @@
 
 **Task2: Protocol for each stage of the testing process**
 - What is the exact protocol + code? What has to be done manually?
-    - Stage 1: Sample Plating
+    - Stage 1: Sample Plating <-- MANUAL STEP
     - Stage 2: RNA Extraction
     - Stage 3: qPCR Setup
