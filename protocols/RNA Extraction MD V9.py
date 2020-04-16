@@ -391,6 +391,35 @@ def transfer_and_mixIPA320(reagent, samples):
         if not m300.tip_attached:
             m300.pick_up_tip()
 
+        # if well_code in ['A5', 'A9']:
+        #     resuspend(sourcewell)
+        # else:
+        #     resuspendLITE(sourcewell)
+        #dispenses 30mm from bottom of the well to prevent contamination of reagents with split volumes. TO DO: weak height and speed
+        #Air gap of 10ul to help avoid dripping
+        m300.transfer(reagent['transfer_volume'], sourcewell.bottom(0.6), s.top(-10), new_tip=reagent['new_tip'], air_gap=10)
+        m300.set_flow_rate(aspirate=200, dispense=200)
+        m300.mix(reagent['mix_repetitions'], reagent['mix_volume'], s)# note that according to nucleic_acid_extration.ot2.py .mix volume differs from .transfer volume
+        m300.blow_out()
+        m300.set_flow_rate(aspirate=150, dispense=150)
+        m300.drop_tip()
+
+def transfer_and_mixBEADS(reagent, samples):
+    
+    for s in samples:
+
+        # well_code = str(s).split(" ")[-1][:-1]
+        # if well_code in ['A1','A2','A3','A4']:
+        #     sourcewell = trough.wells('A12')
+        # elif well_code in ['A5','A6','A7','A8']:
+        #     sourcewell = trough.wells('A11')
+        # elif well_code in ['A9','A10','A11','A12']:
+        #     sourcewell = trough.wells('A10')
+        sourcewell = reagent['setup']
+
+        if not m300.tip_attached:
+            m300.pick_up_tip()
+
         if well_code in ['A5', 'A9']:
             resuspend(sourcewell)
         else:
@@ -643,7 +672,7 @@ resuspend(well_to_mix)
 
 
 # Add 40 µl of silica-coated magnetic beads
-transfer_and_mix(reagents['magnetic_beads'], samples)
+transfer_and_mixBEADS(reagents['magnetic_beads'], samples)
 
 
 # In[28]:
