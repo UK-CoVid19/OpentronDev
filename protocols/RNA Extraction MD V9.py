@@ -850,7 +850,7 @@ for rep in range(repss):
 # In[ ]:
 
 
-# magdeck.disengage()
+magdeck.disengage()
 
 
 # ## kindly request human to move the plate to the temperature module
