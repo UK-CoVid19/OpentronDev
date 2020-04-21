@@ -408,7 +408,7 @@ def transfer_and_mixBEADS(reagent, samples):
     
     for s in samples:
 
-        # well_code = str(s).split(" ")[-1][:-1]
+        well_code = str(s).split(" ")[-1][:-1]
         # if well_code in ['A1','A2','A3','A4']:
         #     sourcewell = trough.wells('A12')
         # elif well_code in ['A5','A6','A7','A8']:
