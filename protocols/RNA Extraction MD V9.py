@@ -330,9 +330,9 @@ def resuspend(well_to_mix):
 
     for position in np.arange(1.2,0.4, -0.2):
         print(position)
-        m300.aspirate(volume=150, location=well_to_mix.top(10), rate=1.0)
+        m300.aspirate(volume=150, location=well_to_mix.top(-5), rate=1.0)
         m300.mix(5, 50, location=well_to_mix.bottom(position))
-        m300.dispense(volume=150, location=well_to_mix.top(10), rate=1.0)
+        m300.dispense(volume=150, location=well_to_mix.top(-5), rate=1.0)
 
     m300.move_to(well_to_mix.top(20), strategy='arc')
 
@@ -350,9 +350,9 @@ def resuspendLITE(well_to_mix):
 
     for position in np.arange(0.8,0.4, -0.2):
         print(position)
-        m300.aspirate(volume=150, location=well_to_mix.top(10), rate=1.0)
+        m300.aspirate(volume=150, location=well_to_mix.top(-5), rate=1.0)
         m300.mix(5, 50, location=well_to_mix.bottom(position))
-        m300.dispense(volume=150, location=well_to_mix.top(10), rate=1.0)
+        m300.dispense(volume=150, location=well_to_mix.top(-5), rate=1.0)
 
     m300.move_to(well_to_mix.top(20), strategy='arc')
         
@@ -429,7 +429,7 @@ def transfer_and_mixBEADS(reagent, samples):
         m300.transfer(reagent['transfer_volume'], sourcewell.bottom(0.6), s.top(-10), new_tip=reagent['new_tip'], air_gap=10)
         m300.set_flow_rate(aspirate=200, dispense=200)
         m300.mix(reagent['mix_repetitions'], reagent['mix_volume'], s)# note that according to nucleic_acid_extration.ot2.py .mix volume differs from .transfer volume
-        m300.blow_out()
+        m300.blow_out(s.top(-2))
         m300.set_flow_rate(aspirate=150, dispense=150)
         m300.drop_tip()
 
@@ -691,7 +691,7 @@ magdeck.engage(height=12)
 if test_mode:
     m300.delay(seconds=5)
 else:
-    m300.delay(seconds=50)
+    m300.delay(seconds=90)
 
 
 # In[33]:
@@ -751,7 +751,7 @@ magdeck.engage(height=12)
 if test_mode:
     m300.delay(seconds=5)
 else:
-    m300.delay(seconds=50)
+    m300.delay(seconds=90)
 
 
 # volume & height from bottom to be adjusted based on tests
@@ -813,7 +813,7 @@ for rep in range(repss):
     if test_mode:
         m300.delay(seconds=5)
     else:
-        m300.delay(seconds=50)
+        m300.delay(seconds=90)
     
     # volume & height from bottom to be adjusted based on tests
     #trash_supernatant(volume=900, height=2, samples=samples, pipette = 'ethanol')
@@ -914,7 +914,7 @@ magdeck.engage(height=12)
 if test_mode:
     m300.delay(seconds=5)
 else:
-    m300.delay(seconds=50)
+    m300.delay(seconds=90)
 
 #transfer 40ul of eluted sample to PCR plate
 # pcr plate mapped to samples.
