@@ -2,27 +2,27 @@
 # coding: utf-8
 
 # ## RNA extraction protocol using BOMB.bio kit.
-# 
-# 
+#
+#
 # The following code commands the OT2 to extract COVID-19 RNA from a liquid samples using the BOMB.bio kit.
-# 
-# 
+#
+#
 # ## Protocol
-# 
+#
 # 1. Specify number of samples to run, in groups of eight. e.g. eight samples = 1 sample channel, 32 samples = 4 sample channels etc.
-# 
+#
 # 2. Run Cell 4 to generate Python script called: rna_extraction_jupyter_exported.py
-# 
+#
 # 3. Turn on OT2, connect and calibrate the deck.
 # 4. Run Python script and perform labware calibration with dummy labware.
-# 
+#
 # 5. Click 'return tip and proceed to run'. Before starting:
 # 6. Clear deck and clean/RNA Zap deck, labware, pipettes and walls.
 # 7. Install RNA free labware with regents. Remember to remove lids.
-# 
+#
 # 8. Click "start".
-# 
-# 
+#
+#
 
 # In[ ]:
 
@@ -40,19 +40,19 @@
 
 metadata = {
     'protocolName': 'RNA Extraction v0.2',
-    'author': 'Aubin Fleiss <afleiss@ic.ac.uk>, Neil MacKenzie, Eyal Kazin <eyalkazin@gmail.com>, Alex Perkins <a.perkins19@ic.ac.uk>, M Donora <matthew@opencell.bio>', 
+    'author': 'Aubin Fleiss <afleiss@ic.ac.uk>, Neil MacKenzie, Eyal Kazin <eyalkazin@gmail.com>, Alex Perkins <a.perkins19@ic.ac.uk>, M Donora <matthew@opencell.bio>',
     'source': 'Testing' #'Custom Protocol Request'
 }
 
 
 # ## To simulate/export protocol
-# 
+#
 # The next cell exports the jupyter notebook to rna_extraction_jupyter_exported.py. The exported file can be either:
 # - used directly in the Opentrons app
 # - simulated in the command line for instance : $ opentrons_simulate rna_extraction.py
 # - simulated within this notebook. To do so run the cell after the next
 
-# ## User parameters: 
+# ## User parameters:
 # - <b>number_of_sample_columns</b> (integer) defines the number of columns in the test plate that contain samples. This parameter is probably the only one the user will provide once the protocol is established
 # <p>
 # - <b>DNAse_incubation</b> (bool) switch on (True) or off (False) DNAse treatment
@@ -75,7 +75,7 @@ test_mode = False
 
 
 # ## Installing, updating, loading modules
-# 
+#
 
 # In[8]:
 
@@ -83,7 +83,7 @@ test_mode = False
 # intalling opentrons module (needed only once)
 
 #import sys
-#!{sys.executable} -m pip install opentrons 
+#!{sys.executable} -m pip install opentrons
 
 
 # In[9]:
@@ -137,9 +137,9 @@ magdeck = modules.load('magdeck', '9')
 magdeck.disengage()
 
 
-# 
+#
 # ## Instanciate labware
-# 
+#
 
 # In[15]:
 
@@ -154,8 +154,8 @@ if plate_name not in labware.list():
         diameter = 8.5,                     # diameter (mm) of each well on the plate
         depth=41,                       # depth (mm) of each well on the plate
         volume=2000)
-    
-    
+
+
 # # PCR plate
 # nunc_plate = 'nunc_96_wellplate_400ul'
 # if nunc_plate not in labware.list():
@@ -177,10 +177,10 @@ if axy_plate not in labware.list():
         diameter = 5.3,                     # diameter (mm) of each well on the plate
         depth=20,                       # depth (mm) of each well on the plate
         volume=400)
-    
+
 
 #liquid_bin = labware.load('agilent_1_reservoir_290ml', 11)
-    
+
 # reagents plate
 #use deep well for now
 trough = labware.load(plate_name, '8', 'trough')
@@ -207,7 +207,7 @@ tip_rack_6 = labware.load('opentrons_96_filtertiprack_200ul', '11')
 tip_rack_ethanol_wash = labware.load('opentrons_96_filtertiprack_200ul', 3)
 
 
-tips = [tip_rack_1, tip_rack_2, tip_rack_3, tip_rack_4, tip_rack_5, tip_rack_6] 
+tips = [tip_rack_1, tip_rack_2, tip_rack_3, tip_rack_4, tip_rack_5, tip_rack_6]
 
 
 # ## Instanciate pipette and set flow rate
@@ -222,9 +222,9 @@ m300 = instruments.P300_Multi(mount='right', tip_racks=tips)
 m300.set_flow_rate(aspirate=150, dispense=150)
 
 
-# 
+#
 # ## Instanciate reagents
-# 
+#
 
 # In[12]:
 
@@ -249,33 +249,33 @@ else:
 
 reagents = OrderedDict()
 
-# Add 320 μl of isopropanol 
+# Add 320 μl of isopropanol
 # For 96 wells, need to add to A10, A11, A12
-reagents['isopropanol_320'] = {'well': 'A12', 
+reagents['isopropanol_320'] = {'well': 'A12',
                                'transfer_volume': 320,
-                               'mix_volume': 190, 
+                               'mix_volume': 190,
                                'mix_repetitions': 3,
                                'new_tip': NEW_TIP_MODE}
 
 # Add 40 μl of silica-coated magnetic beads (BOMB protocol #2.1, 1:10 diluted from stock), seal and shake at RT at 1400 rpm for 5 min
-reagents['magnetic_beads'] = {'well': 'A9', 
-                              'transfer_volume': 40, 
-                              'mix_volume': 100, 
+reagents['magnetic_beads'] = {'well': 'A9',
+                              'transfer_volume': 40,
+                              'mix_volume': 100,
                               'mix_repetitions': MIX_REPETITIONS,
                               'new_tip': NEW_TIP_MODE}
 
 # Remove the plate from the magnetic stand and add 400 μl isopropanol. Shake at RT at 1400 rpm for 2 min
 # For 96 wells, need to add to A6, A7, A8
-reagents['isopropanol_400'] = {'well': 'A8', 
-                               'transfer_volume': 400, 
-                               'mix_volume': 190, 
+reagents['isopropanol_400'] = {'well': 'A8',
+                               'transfer_volume': 400,
+                               'mix_volume': 190,
                                'mix_repetitions': MIX_REPETITIONS,
                                'new_tip': NEW_TIP_MODE}
 
 #Add 40 µl of nuclease-free water to elute RNA, mix at 1300 rpm for 5 min
-reagents['nuclease_free_water'] = {'well': 'A5', 
-                                   'transfer_volume': 40, 
-                                   'mix_volume': 20, 
+reagents['nuclease_free_water'] = {'well': 'A5',
+                                   'transfer_volume': 40,
+                                   'mix_volume': 20,
                                    'mix_repetitions': MIX_REPETITIONS_WATER,
                                    'new_tip': NEW_TIP_MODE}
 
@@ -298,14 +298,14 @@ def mix_wells(mix_locations, mix_reps):
     """mixes a well thoroughly by aspirating/rejecting liquid at different heights in a well"""
 
     m300.set_flow_rate(aspirate=300, dispense=550)
-    
+
     for well in mix_locations:
-        
+
         if not m300.tip_attached:
             m300.pick_up_tip()
 
-        m300.move_to(well.top(20), strategy='arc') 
-        
+        m300.move_to(well.top(20), strategy='arc')
+
         for position in range(20,2,-2):
             m300.aspirate(volume=200, location=well.bottom(position), rate=1.0)
             m300.blow_out(well.bottom(position))
@@ -320,12 +320,12 @@ def resuspend(well_to_mix):
     """resuspends the contents of a well by pipetting liquid up and down while gradually descending into the well"""
 
     m300.set_flow_rate(aspirate=150, dispense=150)
-        
+
     if not m300.tip_attached:
         m300.pick_up_tip()
 
     m300.move_to(well_to_mix.top(10), strategy='arc') # fist move to the well
-        
+
         # then aspirate and reject
 
     for position in np.arange(1.2,0.4, -0.2):
@@ -340,12 +340,12 @@ def resuspendLITE(well_to_mix):
     """resuspends the contents of a well by pipetting liquid up and down while gradually descending into the well"""
 
     m300.set_flow_rate(aspirate=150, dispense=150)
-        
+
     if not m300.tip_attached:
         m300.pick_up_tip()
 
     m300.move_to(well_to_mix.top(10), strategy='arc') # fist move to the well
-        
+
         # then aspirate and reject
 
     for position in np.arange(0.8,0.4, -0.2):
@@ -355,15 +355,15 @@ def resuspendLITE(well_to_mix):
         m300.dispense(volume=150, location=well_to_mix.top(-5), rate=1.0)
 
     m300.move_to(well_to_mix.top(20), strategy='arc')
-        
+
 
 def transfer_and_mix(reagent, samples):
-    
+
     for s in samples:
 
         if not m300.tip_attached:
             m300.pick_up_tip()
-            
+
         #dispenses 30mm from bottom of the well to prevent contamination of reagents with split volumes. TO DO: weak height and speed
         #Air gap of 10ul to help avoid dripping
         m300.transfer(reagent['transfer_volume'], reagent['setup'].bottom(0.6), s.top(-10), new_tip=reagent['new_tip'], air_gap=10)
@@ -377,7 +377,7 @@ def transfer_and_mix(reagent, samples):
         m300.drop_tip()
 
 def transfer_and_mixIPA320(reagent, samples):
-    
+
     for s in samples:
 
         well_code = str(s).split(" ")[-1][:-1]
@@ -405,7 +405,7 @@ def transfer_and_mixIPA320(reagent, samples):
         m300.drop_tip()
 
 def transfer_and_mixBEADS(reagent, samples):
-    
+
     for s in samples:
 
         well_code = str(s).split(" ")[-1][:-1]
@@ -433,11 +433,11 @@ def transfer_and_mixBEADS(reagent, samples):
         m300.set_flow_rate(aspirate=150, dispense=150)
         m300.drop_tip()
 
-        
+
 def trash_supernatant(volume, height, samples):
     """ function to remove [volume in ul] of supernatant from [samples], pipetting [height] units from the bottom of the well"""
     # height to be tested, more or less reliable depending on API version
-    
+
     for s in samples:
         m300.pick_up_tip()
         if volume <=190:
@@ -450,15 +450,15 @@ def trash_supernatant(volume, height, samples):
         # which forms bubbles and may lead to cross contaminations (does not happen with all liquids
         # Keep eyes peeled at this stage)
         m300.drop_tip()
-        
-        
+
+
 """
 def trash_supernatant_V2(volume, height, samples):
     #function to remove [volume in ul] of supernatant from [samples], pipetting [height] units from the bottom of the well
     # height to be tested, more or less reliable depending on API version
-    
 
-    
+
+
     for s in samples:
         m300.pick_up_tip()
         m300.transfer(volume, s.bottom(height), location=types.Location(point=types.Point(500, 500, 250), labware=None), new_tip='never', air_gap=10, blow_out = True)
@@ -466,21 +466,21 @@ def trash_supernatant_V2(volume, height, samples):
         # which forms bubbles and may lead to cross contaminations (does not happen with all liquids
         # Keep eyes peeled at this stage)
         m300.drop_tip()
-"""       
-        
-        
+"""
+
+
 def text_in_a_box(line,border_char="#"):
     """ function to print some text in a box of asterisks"""
-    
+
     new_text=str(line)
     line_len = len(line)
     new_text = "\n"+border_char*(line_len+4)+"\n"+border_char+" "+line+" "+border_char+"\n"+border_char*(line_len+4)
-    
+
     return(new_text)
 
 
 def blow_air(mins, samples):
-    
+
     #same tip
     m300.pick_up_tip()
 
@@ -501,7 +501,7 @@ def blow_air(mins, samples):
             m300.aspirate(190, s.top(15))
             m300.dispense(190, s.bottom(15))
     #MD EDIT - deprecated below
-    # for the duration of the time specified: 
+    # for the duration of the time specified:
     # t_end = time.time() + 60 * minutes
     # while time.time() < t_end:
 
@@ -513,15 +513,15 @@ def blow_air(mins, samples):
     #         m300.aspirate(190, s.top(15))
     #         m300.dispense(190, s.bottom(15))
     m300.drop_tip()
-            
-            
+
+
 
 
 # In[ ]:
 
 
 
-    
+
 
 
 # ## Recapitulate setup
@@ -599,21 +599,21 @@ print("================================= Run Start =============================
 # IMPORTANT REMARKS
 
 # the API is not too robust yet as regards sanity checks
-# Consequently the robot is still a danger to itself 
+# Consequently the robot is still a danger to itself
 # and has pronounced taste for self-destruction
 
 # never ever remove the block below
 # unless you want the robot to pipette wells located beyond plate boundaries
 # crushing all your labware
 
-# also, when using a multi-channel pipette, make sure you are ALWAYS 
+# also, when using a multi-channel pipette, make sure you are ALWAYS
 # using well coordinates from first row (A1 to A12) of your 96-well plate
 # unless you want to spent countless hours re-calibrating your robot after
 # its arm collided on external walls
 
 if number_of_sample_columns > 12:
     raise Exception("Please specify a valid number of sample columns.")
-    
+
 
 samples = sample_plate.rows('A')[0:number_of_sample_columns]
 
@@ -783,21 +783,21 @@ robot.comment(text_in_a_box("Ethanol wash steps. Uses specific tips. Loops 4x"))
 
 repss = 4
 for rep in range(repss):
-    
+
     magdeck.disengage()
-    
+
     for well in samples:
-        
+
         #maps tips to sample well - uses specific tip box
         well_code = str(well).split(" ")[-1][:-1]
-        
+
         #if not m300.tip_attached:
         m300.pick_up_tip(tip_rack_ethanol_wash[well_code])
 
-        m300.transfer(200, 
-                      ethanol_plate.wells(well_code).bottom(2), 
+        m300.transfer(200,
+                      ethanol_plate.wells(well_code).bottom(2),
                       well.top(-10), new_tip='never', air_gap = 10)
-        
+
         m300.set_flow_rate(aspirate=200, dispense=250)
         m300.aspirate(100, well.top(20))
         m300.mix(MIX_REPETITIONS, 100, well)
@@ -809,19 +809,19 @@ for rep in range(repss):
 
     robot.comment("Activating magdeck for 30 seconds")
     magdeck.engage(height=12)
-    
+
     if test_mode:
         m300.delay(seconds=5)
     else:
         m300.delay(seconds=90)
-    
+
     # volume & height from bottom to be adjusted based on tests
     #trash_supernatant(volume=900, height=2, samples=samples, pipette = 'ethanol')
     for well in samples:
-        
+
         #uses same tips
         well_code = str(well).split(" ")[-1][:-1]
-        
+
         m300.pick_up_tip(tip_rack_ethanol_wash[well_code])
         if rep == (repss-1):
             m300.transfer(300, well.bottom(0.2), m300.trash_container.top(10), new_tip='never' , air_gap = 10, blow_out = True)
@@ -837,7 +837,7 @@ for rep in range(repss):
         # transfer function tends to eject a small volume of air after all liquid is trashed
         # which forms bubbles and may lead to cross contaminations (does not happen with all liquids
         # Keep eyes peeled at this stage)#
-        
+
         m300.return_tip()
 
 
@@ -923,14 +923,14 @@ else:
 # air gap of 10ul to protect sample
 
 for well in samples:
-        
+
         if not m300.tip_attached:
             m300.pick_up_tip()
 
         well_code = str(well).split(" ")[-1][:-1]
         m300.set_flow_rate(aspirate=30, dispense=30)
         m300.transfer(40, well.bottom(0.2), pcr_plate.wells(well_code).bottom(0.5), new_tip='always', air_gap=10, blow_out = True)
-        
+
 magdeck.disengage()
 robot.comment("Done, at last!")
 
