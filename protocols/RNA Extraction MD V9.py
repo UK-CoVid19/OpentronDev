@@ -316,7 +316,8 @@ def mix_wells(mix_locations, mix_reps):
         m300.move_to(well.top(20), strategy='arc')
     m300.set_flow_rate(aspirate=150, dispense=150)
 
-def resuspend(well_to_mix):
+
+def resuspendBase(well_to_mix, start_height):
     """resuspends the contents of a well by pipetting liquid up and down while gradually descending into the well"""
 
     m300.set_flow_rate(aspirate=150, dispense=150)
@@ -328,33 +329,19 @@ def resuspend(well_to_mix):
 
         # then aspirate and reject
 
-    for position in np.arange(1.2,0.4, -0.2):
+    for position in np.arange(start_height, 0.4, -0.2):
         print(position)
         m300.aspirate(volume=150, location=well_to_mix.top(-5), rate=1.0)
         m300.mix(5, 50, location=well_to_mix.bottom(position))
         m300.dispense(volume=150, location=well_to_mix.top(-5), rate=1.0)
 
     m300.move_to(well_to_mix.top(20), strategy='arc')
+
+def resuspend(well_to_mix):
+    resuspendBase(well_to_mix, 1.2)
 
 def resuspendLITE(well_to_mix):
-    """resuspends the contents of a well by pipetting liquid up and down while gradually descending into the well"""
-
-    m300.set_flow_rate(aspirate=150, dispense=150)
-
-    if not m300.tip_attached:
-        m300.pick_up_tip()
-
-    m300.move_to(well_to_mix.top(10), strategy='arc') # fist move to the well
-
-        # then aspirate and reject
-
-    for position in np.arange(0.8,0.4, -0.2):
-        print(position)
-        m300.aspirate(volume=150, location=well_to_mix.top(-5), rate=1.0)
-        m300.mix(5, 50, location=well_to_mix.bottom(position))
-        m300.dispense(volume=150, location=well_to_mix.top(-5), rate=1.0)
-
-    m300.move_to(well_to_mix.top(20), strategy='arc')
+    resuspendBase(well_to_mix, 0.8)
 
 
 def transfer_and_mix(reagent, samples):
