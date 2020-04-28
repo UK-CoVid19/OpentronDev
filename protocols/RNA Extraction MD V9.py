@@ -62,7 +62,7 @@ metadata = {
 # In[ ]:
 
 
-number_of_sample_columns = 6
+number_of_sample_columns = 4
 
 film = True
 
