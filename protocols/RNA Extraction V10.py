@@ -32,7 +32,7 @@ metadata = {
 number_of_sample_columns = 6
 test_mode = False
 #####################
-#####################
+#                   #
 #####################
 
 # import standard modules
@@ -88,8 +88,8 @@ sample_plate = labware.load(plate_name, '9', share=True)
 
 # instanciate tip rack in remaining slots
 tip_rack_1 = labware.load('opentrons_96_filtertiprack_200ul', '2')
-tip_rack_2 = labware.load('opentrons_96_filtertiprack_200ul','4' )
-tip_rack_3 = labware.load('opentrons_96_filtertiprack_200ul','5' )
+tip_rack_2 = labware.load('opentrons_96_filtertiprack_200ul','4')
+tip_rack_3 = labware.load('opentrons_96_filtertiprack_200ul','5')
 tip_rack_4 = labware.load('opentrons_96_filtertiprack_200ul', '7')
 tip_rack_5 = labware.load('opentrons_96_filtertiprack_200ul', '10')
 tip_rack_6 = labware.load('opentrons_96_filtertiprack_200ul', '11')
@@ -160,7 +160,8 @@ for reagent_name in reagents:
 # Define custom functions
 
 def mix_wells(mix_locations, mix_reps):
-    """mixes a well thoroughly by aspirating/rejecting liquid at different heights in a well"""
+    """ Function to mix [mix_locations] thoroughly by aspirating/rejecting liquid at different heights in a well,
+    performed [mix_reps] times """
 
     m300.set_flow_rate(aspirate=300, dispense=550)
     
@@ -182,7 +183,7 @@ def mix_wells(mix_locations, mix_reps):
     m300.set_flow_rate(aspirate=150, dispense=150)
 
 def resuspend(well_to_mix):
-    """resuspends the contents of a well by pipetting liquid up and down while gradually descending into the well"""
+    """ Function to resuspend contents of [well_to_mix] by pipetting liquid up and down while gradually descending into the well """
 
     m300.set_flow_rate(aspirate=150, dispense=150)
         
@@ -202,7 +203,7 @@ def resuspend(well_to_mix):
     m300.move_to(well_to_mix.top(20), strategy='arc')
 
 def resuspendLITE(well_to_mix):
-    """resuspends the contents of a well by pipetting liquid up and down while gradually descending into the well"""
+    """ Function to resuspend contents of [well_to_mix] by pipetting liquid up and down while gradually descending into the well (less) """
 
     m300.set_flow_rate(aspirate=150, dispense=150)
         
@@ -223,13 +224,14 @@ def resuspendLITE(well_to_mix):
         
 
 def transfer_and_mix(reagent, samples):
+    """ Custom function to transfer [reagent] from correct source wells to [samples] & mix """
     
     for s in samples:
 
         if not m300.tip_attached:
             m300.pick_up_tip()
             
-        #dispenses 30mm from bottom of the well to prevent contamination of reagents with split volumes. TO DO: weak height and speed
+        #dispenses 30mm from bottom of the well to prevent contamination of reagents with split volumes.
         #Air gap of 10ul to help avoid dripping
         m300.transfer(reagent['transfer_volume'], reagent['setup'].bottom(0.6), s.top(-10), new_tip=reagent['new_tip'], air_gap=10)
         m300.set_flow_rate(aspirate=200, dispense=200)
@@ -242,6 +244,8 @@ def transfer_and_mix(reagent, samples):
         m300.drop_tip()
 
 def transfer_and_mixIPA320(reagent, samples):
+    """ Custom function to transfer [IPA320] from correct source wells to [samples] & mix 
+    (where [IPA320] = [reagent])"""
     
     for s in samples:
 
@@ -264,6 +268,8 @@ def transfer_and_mixIPA320(reagent, samples):
         m300.drop_tip()
 
 def transfer_and_mixBEADS(reagent, samples):
+    """ Custom function to resuspend [beads], transfer [beads] to [samples], & mix
+    (where [beads] = [reagent])"""
     
     for s in samples:
 
@@ -317,7 +323,7 @@ def text_in_a_box(line,border_char="#"):
 
 
 def blow_air(mins, samples):
-    """ function to blow air over beads while they dry, improving drying time
+    """ function to blow air for [mins] over [samples] while they dry, improving drying time
         empirically determined drying time ~35 mins"""
     
     #same tip
