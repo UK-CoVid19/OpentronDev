@@ -1,7 +1,7 @@
 ## Opentron Protocols for CoVid-19
 
 **Station A**
-- Not currently automated
+- [Not currently automated]
 
 **Station B**
 - Automated RNA extraction
