@@ -1,10 +1,14 @@
 ## Opentron Protocols for CoVid-19
 
-**Task1: Defining overall procedure/protocol for the testing process**
-- communication needed with collaborators of qpcr design
+**Station A**
+- Not currently automated
 
-**Task2: Protocol for each stage of the testing process**
-- What is the exact protocol + code? What has to be done manually?
-    - Stage 1: Sample Plating <-- MANUAL STEP
-    - Stage 2: RNA Extraction
-    - Stage 3: qPCR Setup
+**Station B**
+- Automated RNA extraction
+- Code written in python 3
+- See here for laboratory protocol (https://docs.google.com/document/d/11Kfc2KW56N5ggyGUDIIb-YVgKA0DsH8MjnlfujjUXmc/edit?usp=sharing)
+
+**Station C**
+- Automated qPCR prep
+- Protocol made with Opentrons protocol designer
+- See here for laboratory protocol (#in progress).
