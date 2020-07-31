@@ -504,7 +504,7 @@ for _ in range(reps_):
         m300.pick_up_tip(tip_rack_ethanol_wash[well_code])
         # trashes supernatant from the bottom of the well (0.2mm) if last repetition
         # ensures maximal ethanol removal before drying stage
-        if rep == (reps_-1):
+        if _ == (reps_-1):
             m300.transfer(300, well.bottom(0.2), m300.trash_container.top(10), new_tip='never' , air_gap = 10, blow_out = True)
         else:
             m300.transfer(300, well.bottom(0.6), m300.trash_container.top(10), new_tip='never' , air_gap = 10, blow_out = True)
