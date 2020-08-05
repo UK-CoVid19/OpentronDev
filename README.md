@@ -1,7 +1,7 @@
 # OpentronDev
 Opentron Setup and Protocol Developments 
 
-- Task:  Set-Up of 3 OpenTrons stations and qPCR machines + inventory what is missing?
+- Task:  Write protocols for the OpenTrons OT2 liquid handling robot for RNA extraction using various commercial and open-source kits
 - Location: Open Cell; Contact: Helene at +447400277072
 
 **Station A: Sample Plating (needs to be in a separate room)**
@@ -14,11 +14,10 @@ Opentron Setup and Protocol Developments
 **Station B: RNA Extraction (potentially needs to be placed in a BSL cabinet)**
 - p300 8-channel pipette
 - Magnetic Module
-- 96 Deepwell Extraction Plate
+- 3x 96 Deepwell Plate
 - 96 Well Elution Plate
 - 5x racks of 200ul filter tips
-- 2x 12-channel reagent reservoirs
-- 2x 1-channel liquid trash reservoirs
+- 1x liquid trash reservoirs
 
 **Station C - Assay Setup (next to qPCR machine) - extra clean environment!**
 - p20 single-channel
